@@ -28,4 +28,24 @@ app.UseAuthorization();
 
 app.MapControllers();
 
+ApplyMigration();
+
 app.Run();
+
+void ApplyMigration()
+{
+    // Create a new scoped lifetime for resolving services (like AppDbContext)
+    using (var scope = app.Services.CreateScope())
+    {
+        // Get an instance of AppDbContext from the scoped service provider
+        var _db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+
+        // Check if there are any pending migrations (migrations that haven't been applied to the DB yet)
+        if (_db.Database.GetPendingMigrations().Count() > 0)
+        {
+            // Apply all pending migrations to the database
+            _db.Database.Migrate();
+        }
+    }
+}
+
