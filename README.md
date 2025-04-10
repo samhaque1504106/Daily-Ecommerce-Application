@@ -1,1 +1,1 @@
-# Mango
+# Daily Ecommerce App
