@@ -31,7 +31,7 @@ namespace Mango.Web.Service
                 HttpRequestMessage message = new();
 
                 // Set header to indicate the request body is JSON
-                message.Headers.Add("Content-Type", "application/json");
+                message.Headers.Add("Accept", "application/json");
 
                 // (Optional) Token logic would go here
 

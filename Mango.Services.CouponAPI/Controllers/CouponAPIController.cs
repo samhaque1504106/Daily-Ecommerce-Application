@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;  // ASP.NET Core MVC classes
 namespace Mango.Services.CouponAPI.Controllers
 {
     // Define the route template for the controller
-    [Route("api/[controller]")]
+    [Route("api/coupon")]
     [ApiController]  // Marks this class as an API controller
     public class CouponAPIController : ControllerBase
     {
