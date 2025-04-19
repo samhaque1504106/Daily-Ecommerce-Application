@@ -30,5 +30,20 @@ namespace Mango.Web.Controllers
         {
             return View();
         }
+        [HttpPost]
+        public async Task<IActionResult> CouponCreate(CouponDTO model)
+        {
+            if (ModelState.IsValid)
+            {
+                
+                ResponseDto? response = await _couponService.CreateCouponsAsync(model);
+
+                if (response != null && response.IsSuccess == true)
+                {
+                    return RedirectToAction(nameof(CouponIndex));
+                }
+            }
+            return View(model);
+        }
     }
 }
