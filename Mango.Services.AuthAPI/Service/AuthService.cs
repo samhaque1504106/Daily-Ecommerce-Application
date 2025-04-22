@@ -11,10 +11,12 @@ namespace Mango.Services.AuthAPI.Service
         private readonly AppDbContext _db;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
-
-        public AuthService(AppDbContext db, UserManager<ApplicationUser> userManager ,RoleManager<IdentityRole> roleManager)
+        private readonly IJWTTokenGenerator _jwtTokenGenerator;
+        public AuthService(AppDbContext db, UserManager<ApplicationUser> userManager 
+            ,RoleManager<IdentityRole> roleManager,IJWTTokenGenerator jWTTokenGenerator)
         {
             _db = db;
+            _jwtTokenGenerator = jWTTokenGenerator;
             _userManager = userManager;
             _roleManager = roleManager;
         }
@@ -57,9 +59,38 @@ namespace Mango.Services.AuthAPI.Service
             }
             return "Error encountered";
         }
-       public Task<LoginResponseDto> Login(LoginRequestDto loginRequestDto)
+       public async Task<LoginResponseDto> Login(LoginRequestDto loginRequestDto)
        {
-         throw new NotImplementedException();
-       }
+            var user = _db.ApplicationUsers.FirstOrDefault(u=>u.UserName.ToLower()==loginRequestDto.UserName.ToLower());
+
+            bool isValid = await _userManager.CheckPasswordAsync(user, loginRequestDto.Password);
+
+            if (isValid==false || user==null)
+            {
+                return new LoginResponseDto()
+                {
+                    User = null,
+                    Token = ""
+                };
+            }
+            //if user found, generate token from JWTTokenGenerator.cs
+            var token = _jwtTokenGenerator.GenerateToken(user);
+
+           UserDto userDto = new()
+            {
+                ID = user.Id,
+                Name = user.Name,
+                Email = user.Email,
+                PhoneNumber = user.PhoneNumber
+
+            };
+            LoginResponseDto loginResponseDto = new LoginResponseDto()
+            {
+                User = userDto,
+                Token = token
+            };
+
+            return loginResponseDto;
+        }
     }
 }
