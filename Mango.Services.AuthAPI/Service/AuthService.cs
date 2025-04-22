@@ -92,5 +92,23 @@ namespace Mango.Services.AuthAPI.Service
 
             return loginResponseDto;
         }
+
+        public async Task<bool> AssignRole(string email, string roleName)
+        {
+            var user = _db.ApplicationUsers.FirstOrDefault(u => u.Email.ToLower() == email.ToLower());
+            if(user!=null)
+            {
+                
+                if (!_roleManager.RoleExistsAsync(roleName).GetAwaiter().GetResult())
+                {
+
+                    //create role if not exists
+                    _roleManager.CreateAsync(new IdentityRole(roleName)).GetAwaiter().GetResult();
+                }
+                await _userManager.AddToRoleAsync(user,roleName);
+                return true;
+            }
+            return false;
+        }
     }
 }
