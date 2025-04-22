@@ -19,7 +19,7 @@ namespace Mango.Services.AuthAPI.Service
             _roleManager = roleManager;
         }
 
-        public async Task<UserDto> Register(RegistrationRequestDto registrationRequestDto)
+        public async Task<string> Register(RegistrationRequestDto registrationRequestDto)
         {
             ApplicationUser user = new()
             {
@@ -44,14 +44,18 @@ namespace Mango.Services.AuthAPI.Service
                         PhoneNumber = userReturn.PhoneNumber
 
                     };
-                    return userDto;
+                    return "";
+                }
+                else
+                {
+                    return result.Errors.FirstOrDefault().Description;
                 }
             }
             catch (Exception ex)
             {
 
             }
-            return new UserDto();
+            return "Error encountered";
         }
        public Task<LoginResponseDto> Login(LoginRequestDto loginRequestDto)
        {
