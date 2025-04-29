@@ -3,14 +3,15 @@ using Azure;
 using Mango.Services.CouponAPI.Data;  // Namespace for the database context (AppDbContext)
 using Mango.Services.CouponAPI.Models;  // Namespace for your Coupon model
 using Mango.Services.CouponAPI.Models.Dto;  // Namespace for the ResponseDto (Data Transfer Object)
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;  // ASP.NET Core classes related to HTTP
 using Microsoft.AspNetCore.Mvc;  // ASP.NET Core MVC classes
 
 namespace Mango.Services.CouponAPI.Controllers
 {
-    // Define the route template for the controller
     [Route("api/coupon")]
-    [ApiController]  // Marks this class as an API controller
+    [ApiController]
+    [Authorize]
     public class CouponAPIController : ControllerBase
     {
         private readonly AppDbContext _db;  // The database context for interacting with the database
@@ -20,9 +21,9 @@ namespace Mango.Services.CouponAPI.Controllers
         // Constructor to inject dependencies
         public CouponAPIController(AppDbContext db, IMapper mapper)
         {
-            _db = db;  // Assign the injected AppDbContext instance to the _db field
-            _response = new ResponseDto();  // Initialize the ResponseDto, which will be returned in responses
-            _mapper = mapper; // Assign the injected Imapper
+            _db = db;  
+            _response = new ResponseDto();  
+            _mapper = mapper; 
         }
 
         // Get all coupons

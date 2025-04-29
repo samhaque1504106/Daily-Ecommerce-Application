@@ -39,13 +39,15 @@ namespace Mango.Web.Controllers
                     JsonConvert.DeserializeObject<LoginResponseDto>(Convert.ToString(responseDto.Result));
                 await SignInUser(loginResponseDto);
                 _tokenProvider.SetToken(loginResponseDto.Token);
+                TempData["success"] = "login successful";
                 return RedirectToAction("Index", "Home");
 
 
             }
             else
             {
-                ModelState.AddModelError("CustomError", responseDto.Message);
+                //ModelState.AddModelError("CustomError", responseDto.Message);
+                TempData["error"] = responseDto.Message;
                 return View(obj);
             }
         }
@@ -84,6 +86,10 @@ namespace Mango.Web.Controllers
                 }
 
 
+            }
+            else
+            {
+                TempData["error"] = result.Message;
             }
             var RoleList = new List<SelectListItem>()
             {
