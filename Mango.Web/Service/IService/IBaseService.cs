@@ -7,6 +7,6 @@ namespace Mango.Web.Service.IService
     {
         // Declare an asynchronous method named SendAsync that takes a RequestDto as input
         // and returns a Task that wraps a nullable ResponseDto
-        Task<ResponseDto?> SendAsync(RequestDto requestDto);
+        Task<ResponseDto?> SendAsync(RequestDto requestDto, bool withBearer = true);
     }
 }

@@ -12,15 +12,17 @@ namespace Mango.Web.Service
     {
         // Field to hold the HTTP client factory for creating HttpClient instances
         private readonly IHttpClientFactory _httpClientFactory;
+        private readonly ITokenProvider _tokenProvider;
 
         // Constructor with dependency injection of IHttpClientFactory
-        public BaseService(IHttpClientFactory httpClientFactory)
+        public BaseService(IHttpClientFactory httpClientFactory, ITokenProvider tokenProvider)
         {
             _httpClientFactory = httpClientFactory;
+            _tokenProvider = tokenProvider;
         }
 
         // This method sends an HTTP request asynchronously and returns a ResponseDto or null
-        public async Task<ResponseDto?> SendAsync(RequestDto requestDto)
+        public async Task<ResponseDto?> SendAsync(RequestDto requestDto, bool withBearer=true)
         {
             try
             {
@@ -46,6 +48,12 @@ namespace Mango.Web.Service
                         Encoding.UTF8,                                // Use UTF-8 encoding
                         "application/json"                            // Set content type
                     );
+                }
+
+                if(withBearer)
+                {
+                    var token = _tokenProvider.GetToken(); 
+                    message.Headers.Add("Authorization",$"Bearer {token}");
                 }
 
                 // Declare variable for the response
