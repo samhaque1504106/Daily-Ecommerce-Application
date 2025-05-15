@@ -1,11 +1,10 @@
-﻿﻿
-@model CartDto
+﻿@model CartDto
 
 @if(Model.CartHeader!=null && Model.CartDetails?.Count()>0){
-<form method="post" asp-action="EmailCart">
+<form method="post" >
     <br />
-@*     <input asp-for="CartHeader.UserId" hidden />
-    <input asp-for="CartHeader.CartHeaderId" hidden /> *@
+    <input asp-for="CartHeader.UserId" hidden />
+        <input asp-for="CartHeader.CartHeaderId" hidden />
     <div class="">
         <div class="card border mt-4 container">
             <div class="card-header bg-dark text-light ml-0 row ">
@@ -35,8 +34,15 @@
                     </div>
                 </div>
                 <hr />
+                    @{
+                        var index = 0;
+                    }
 
-                @foreach(var cartObj in Model.CartDetails){
+                @foreach(var cartObj in Model.CartDetails)
+                {
+                        <input type="hidden" name="CartDetails[@index].CartDetailsId" value="@cartObj.CartDetailsId" />
+                        <input type="hidden" name="CartDetails[@index].ProductId" value="@cartObj.ProductId" />
+                        <input type="hidden" name="CartDetails[@index].Count" value="@cartObj.Count" />
                 <div class="row h-100">
                     <div class="col-4 col-md-2 text-center py-2">
                         <img src="@cartObj.Product.ImageUrl" class="rounded" width="100%" />
@@ -57,11 +63,12 @@
                         </a>
                     </div>
                 </div>
+                        index++;
                 }
                 <hr />
                 <div class="row">
                     <div class="col-6">
-                        @if (string.IsNullOrEmpty(Model.CartHeader.CouponCode))
+                            @if (string.IsNullOrEmpty(Model.CartHeader.CouponCode))
                         {
                             <span>Coupon:</span>
                             <input asp-for="CartHeader.CouponCode" />

@@ -153,11 +153,11 @@ namespace Mango.Services.ShoppingCartAPI.Controllers
 
 
         [HttpPost("ApplyCoupon")]
-        public async Task<object> ApplyCoupon([FromBody]CartDto cartDto)
+        public async Task<object> ApplyCoupon([FromBody] CartDto cartDto)
         {
             try
             {
-                var cartFromDb = await _db.CartHeaders.FirstOrDefaultAsync(u=>u.UserId==cartDto.CartHeader.UserId);
+                var cartFromDb = await _db.CartHeaders.FirstAsync(u=>u.UserId==cartDto.CartHeader.UserId);
                 cartFromDb.CouponCode = cartDto.CartHeader.CouponCode;
                 _db.CartHeaders.Update(cartFromDb);
                 await _db.SaveChangesAsync();
